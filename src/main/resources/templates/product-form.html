@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Product</title>
+    <style>
+        .error { color: red; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <h1>Add New Product</h1>
+
+    <form th:action="@{/products}" th:object="${product}" method="post">
+        <div>
+            <label for="name">Product Name:</label>
+            <input type="text" id="name" th:field="*{name}" />
+            <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</span>
+        </div>
+        <br>
+        <div>
+            <label for="price">Price:</label>
+            <input type="text" id="price" th:field="*{price}" />
+            <span class="error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Invalid price value</span>
+        </div>
+        <br>
+        <button type="submit">Save Product</button>
+    </form>
+</body>
+</html>

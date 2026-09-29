@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Products List</title>
+</head>
+<body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <h1>Product Catalog</h1>
+
+    <div th:if="${#lists.isEmpty(products)}">
+        <p>No products available at this time.</p>
+    </div>
+
+    <ul th:if="${!#lists.isEmpty(products)}">
+        <li th:each="product : ${products}">
+            <a th:href="@{/products/{id}(id=${product.id})}" th:text="${product.name}">Product Name</a>
+            - PHP <span th:text="${product.price}">0.00</span>
+        </li>
+    </ul>
+</body>
+</html>
