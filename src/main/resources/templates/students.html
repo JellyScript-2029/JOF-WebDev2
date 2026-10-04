@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Student List</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; }
+        table { border-collapse: collapse; width: 100%; margin-top: 1rem; }
+        th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #f4f4f4; }
+        tr:hover { background: #fafafa; }
+    </style>
+</head>
+<body>
+    <h1>Student Directory</h1>
+    <a th:href="@{/students/create}">Add Student</a>
+ 
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Course</th>
+            <th>Age</th>
+            <th>Actions</th>
+        </tr>
+        <tr th:each="student : ${students}">
+            <td th:text="${student.id}"></td>
+            <td th:text="${student.name}"></td>
+            <td th:text="${student.email}"></td>
+            <td th:text="${student.course}"></td>
+            <td th:text="${student.age}"></td>
+            <td>
+                <a th:href="@{/students/edit/{id}(id=${student.id})}">Edit</a>
+                <form th:action="@{/students/delete/{id}(id=${student.id})}" method="post" style="display:inline">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+ 
+    <p th:if="${students.isEmpty()}">No students found.</p>
+</body>
+</html>
+ 
