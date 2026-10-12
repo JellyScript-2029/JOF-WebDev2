@@ -13,10 +13,10 @@ public class StudentRepository {
     private final AtomicLong nextId = new AtomicLong(100000);
 
     public StudentRepository() {
-        studentList.add(new Student("Steve", "Computer Science", 72631L, 19, "steve@school.edu"));
-        studentList.add(new Student("Vincent", "Nursing", 34684L, 21, "vincent@school.edu"));
-        studentList.add(new Student("Kate", "Computer Engineering", 92856L, 18, "kate@school.edu"));
-        studentList.add(new Student("Bernice", "Tourism", 23461L, 22, "bernice@school.edu"));
+        studentList.add(new Student("Arvin", "Information Technology", 12345L, 19, "arvin@school.edu"));
+        studentList.add(new Student("Julie", "Nursing", 67891L, 21, "julie@school.edu"));
+        studentList.add(new Student("Mary", "Civil Engineering", 25432L, 18, "mary@school.edu"));
+        studentList.add(new Student("Vince", "Tourism", 96453L, 22, "vince@school.edu"));
     }
 
     public List<Student> getStudentList() {
