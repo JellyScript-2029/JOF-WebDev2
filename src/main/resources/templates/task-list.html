@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Task List</title>
+</head>
+<body>
+<h1>Task Tracker</h1>
+<p><a th:href="@{/tasks/new}" href="task-form.html">+ New Task</a></p>
+
+<p th:if="${#lists.isEmpty(tasks)}">No tasks yet. Create your first task!</p>
+
+<ul th:unless="${#lists.isEmpty(tasks)}">
+    <li th:each="task : ${tasks}">
+        <a th:href="@{/tasks/{id}(id=${task.id})}" href="task-detail.html"
+           th:text="${task.title}">Sample task</a>
+        &mdash;
+        <span th:text="${task.completed} ? 'Completed' : 'Pending'">Pending</span>
+    </li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New Task</title>
+    <style>.error { color: red; }</style>
+</head>
+<body>
+<h1>Create Task</h1>
+<form th:action="@{/tasks}" th:object="${task}" method="post">
+    <div>
+        <label for="title">Title</label><br>
+        <input type="text" id="title" th:field="*{title}">
+        <div class="error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title error</div>
+    </div>
+    <div>
+        <label for="description">Description</label><br>
+        <textarea id="description" rows="4" cols="40" th:field="*{description}"></textarea>
+        <div class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description error</div>
+    </div>
+    <div>
+        <label><input type="checkbox" th:field="*{completed}"> Completed</label>
+    </div>
+    <button type="submit">Save</button>
+    <a th:href="@{/tasks}" href="task-list.html">Cancel</a>
+</form>
+</body>
+</html>

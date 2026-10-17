@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Task Not Found</title>
+</head>
+<body>
+<h1>Oops! Task not found</h1>
+<p th:text="${errorMessage}">The task you requested does not exist.</p>
+<p><a th:href="@{/tasks}" href="../task-list.html">Back to task list</a></p>
+</body>
+</html>

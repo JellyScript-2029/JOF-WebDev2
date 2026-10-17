@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Task Detail</title>
+</head>
+<body>
+<h1>Task Detail</h1>
+<dl>
+    <dt>ID</dt>
+    <dd th:text="${task.id}">1</dd>
+    <dt>Title</dt>
+    <dd th:text="${task.title}">Sample title</dd>
+    <dt>Description</dt>
+    <dd th:text="${task.description}">Sample description</dd>
+    <dt>Status</dt>
+    <dd th:text="${task.completed} ? 'Completed' : 'Pending'">Pending</dd>
+</dl>
+<p><a th:href="@{/tasks}" href="task-list.html">Back to list</a></p>
+</body>
+</html>
