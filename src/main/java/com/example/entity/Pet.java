@@ -1,6 +1,9 @@
 package com.example.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Pet {
@@ -15,6 +18,15 @@ public class Pet {
     private String name;
     private String species;
     private String breed;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id")
+    private PetOwner owner;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "pet", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true)
+    private List<PetVaccination> vaccinations = new ArrayList<>();
 
     public Pet() {
     }
@@ -64,5 +76,17 @@ public class Pet {
 
     public void setBreed(String breed) {
         this.breed = breed;
+    }
+
+    public PetOwner getOwner() {
+        return owner;
+    }
+
+    public void setOwner(PetOwner owner) {
+        this.owner = owner;
+    }
+
+    public List<PetVaccination> getVaccinations() {
+        return vaccinations;
     }
 }
