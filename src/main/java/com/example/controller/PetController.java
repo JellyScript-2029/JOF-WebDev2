@@ -1,28 +1,16 @@
 package com.example.controller;
 
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import com.example.dto.CreatePetRequest;
 import com.example.dto.PetDTO;
 import com.example.dto.UpdatePetRequest;
-import com.example.exception.DuplicateMicrochipException;
 import com.example.service.PetService;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/api/pets")
@@ -35,19 +23,30 @@ public class PetController {
     }
 
     @GetMapping
-    public List<PetDTO> getAll() {
-        return petService.findAll();
+    public Page<PetDTO> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "asc") String direction,
+            @RequestParam(required = false) String species) {
+
+        String sortField = sort;
+        String sortDir = direction;
+        if (sort.contains(",")) {
+            String[] parts = sort.split(",", 2);
+            sortField = parts[0];
+            sortDir = parts[1];
+        }
+        return petService.findAll(page, size, sortField, sortDir, species);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PetDTO> getById(@PathVariable Long id) {
-        return petService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(petService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<PetDTO> create(@RequestBody CreatePetRequest request) {
+    public ResponseEntity<PetDTO> create(@Valid @RequestBody CreatePetRequest request) {
         PetDTO created = petService.create(request);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -57,36 +56,18 @@ public class PetController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PetDTO> update(@PathVariable Long id, @RequestBody UpdatePetRequest request) {
-        return petService.update(id, request)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<PetDTO> update(@PathVariable Long id, @Valid @RequestBody UpdatePetRequest request) {
+        return ResponseEntity.ok(petService.update(id, request));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<PetDTO> patch(@PathVariable Long id, @RequestBody UpdatePetRequest request) {
-        return petService.patch(id, request)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<PetDTO> patch(@PathVariable Long id, @Valid @RequestBody UpdatePetRequest request) {
+        return ResponseEntity.ok(petService.patch(id, request));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (!petService.delete(id)) {
-            return ResponseEntity.notFound().build();
-        }
+        petService.delete(id);
         return ResponseEntity.noContent().build();
-    }
-
-   @ExceptionHandler(DuplicateMicrochipException.class)
-    public ResponseEntity<Object> handleConflict(DuplicateMicrochipException ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(Map.of("message", ex.getMessage()));
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Object> handleBadRequest(IllegalArgumentException ex) {
-        return ResponseEntity.badRequest()
-                .body(Map.of("message", ex.getMessage()));
     }
 }
